@@ -1,0 +1,144 @@
+
+<!doctype html>
+<html lang="en" class="h-100">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title>Link Previewer</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/cover/">
+    <!-- Bootstrap core CSS -->
+    <!-- Favicons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <meta name="theme-color" content="#7952b3">    
+    <!-- Custom styles for this template -->
+    <style>
+        /*
+      * Globals
+      */
+
+
+      /* Custom default button */
+      .btn-secondary,
+      .btn-secondary:hover,
+      .btn-secondary:focus {
+        color: #333;
+        text-shadow: none; /* Prevent inheritance from `body` */
+      }
+
+
+      /*
+      * Base structure
+      */
+
+      body {
+        text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+        box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
+      }
+
+      .cover-container {
+        max-width: 42em;
+      }
+
+
+      /*
+      * Header
+      */
+
+      .nav-masthead .nav-link {
+        padding: .25rem 0;
+        font-weight: 700;
+        color: rgba(255, 255, 255, .5);
+        background-color: transparent;
+        border-bottom: .25rem solid transparent;
+      }
+
+      .nav-masthead .nav-link:hover,
+      .nav-masthead .nav-link:focus {
+        border-bottom-color: rgba(255, 255, 255, .25);
+      }
+
+      .nav-masthead .nav-link + .nav-link {
+        margin-left: 1rem;
+      }
+
+      .nav-masthead .active {
+        color: #fff;
+        border-bottom-color: #fff;
+      }
+    </style>
+  </head>
+  <body class="d-flex text-center text-white bg-dark">
+    <div class="cover-container d-flex w-100 min-vh-100 p-3 mx-auto flex-column">
+      <header class="mb-auto">
+        <div>
+          <h3 class="float-md-start mb-0">Logo</h3>
+          <nav class="nav nav-masthead justify-content-center float-md-end">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </nav>
+        </div>
+      </header>
+      <main class="px-3 mb-5">
+        <form class="row d-flex justify-content-center" id="linkForm" method="GET" url="https://cxgmuuirzz6lnjrxcbckgt5uaq0fqbwy.lambda-url.ap-south-1.on.aws/">
+          <div class="col-9">
+            <input type="text" class="form-control" id="url-finder" placeholder="Enter your URL">
+            <div class="float-lg-start text-danger" id="message_"></div>
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Go</button>
+          </div>
+        </form>
+      </main>
+      <div id="display-result"></div>
+      <footer class="mt-auto text-white-50">
+        <p>Link Previewer for <a target="_blank" href="https://www.findcoder.io/" class="text-white">FindCoder.io</a>, by <a href="https://www.linkedin.com/in/pravar-sharma-3410a199/" target="_blank" class="text-white">@Pravar</a>.</p>
+      </footer>
+    </div> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      $('#linkForm').on('submit', (e)=>{
+        e.preventDefault();
+        $('#message_').html('');
+        $('#display-result').html('');
+        $this = $(this)
+        let method = $('#linkForm').attr('method')
+        let url = $('#linkForm').attr('url')
+        let data = $('#url-finder').val()
+        console.log(method, url, data)
+        $.ajax({
+          url : url, 
+          type : method,
+          data : {'url' : data},
+          success : function(res){ 
+              if (res.status == 200){
+                let fData = JSON.parse(res['detail'])
+                console.log(fData)
+                let htmlText = `<div class="card mx-auto text-dark" style="width: 18rem;">
+                  <img src="${fData.image}" class="card-img-top" alt="..." width=100 height=100 />
+                  <div class="card-body">
+                    <h5 class="card-title">${fData.title}</h5>
+                    <p class="card-text">${fData.description}</p>
+                    <a href="${fData.url}" target="_blank" class="btn btn-primary">Go to the link</a>
+                  </div>
+                </div>`
+                $('#display-result').html(htmlText)
+              }else if (res.status==403){
+                $('#message_').html(res['detail'])
+              }else if(res.status==404){
+                $('#display-result').html(res['detail'])
+              }
+          },
+          error : function(err, status, error){ // Handle errors
+            console.log(err, status, error)
+          }
+   
+       });
+      })
+      
+    </script>  
+  </body>
+</html>
