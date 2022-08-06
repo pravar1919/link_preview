@@ -32,3 +32,4 @@ def home(request):
     return render(request,"index.html")
 
     # https://cxgmuuirzz6lnjrxcbckgt5uaq0fqbwy.lambda-url.ap-south-1.on.aws/
+    # https://s6smggralocmaq4pmhkm67zjci0cafyf.lambda-url.ap-south-1.on.aws/

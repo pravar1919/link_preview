@@ -70,6 +70,10 @@
         color: #fff;
         border-bottom-color: #fff;
       }
+      .spinner-border{
+        height:1rem !important;
+        width:1rem !important;
+      }
     </style>
   </head>
   <body class="d-flex text-center text-white bg-dark">
@@ -83,13 +87,13 @@
         </div>
       </header>
       <main class="px-3 mb-5">
-        <form class="row d-flex justify-content-center" id="linkForm" method="GET" url="https://s6smggralocmaq4pmhkm67zjci0cafyf.lambda-url.ap-south-1.on.aws/"> 
+        <form class="row d-flex justify-content-center" id="linkForm" method="GET" url="."> 
           <div class="col-9">
             <input type="text" class="form-control" id="url-finder" placeholder="Enter your URL">
             <div class="float-lg-start text-danger" id="message_"></div>
           </div>
           <div class="col-auto">
-            <button type="submit" class="btn btn-primary">Go</button>
+            <button type="submit" id="submit-btn" class="btn btn-primary">Go</button>
           </div>
         </form>
       </main>
@@ -102,6 +106,8 @@
     <script>
       $('#linkForm').on('submit', (e)=>{
         e.preventDefault();
+        $('#submit-btn').addClass('disabled').html(`<div class="spinner-border text-warning" role="status">
+        </div>`)
         $('#message_').html('');
         $('#display-result').html('');
         $this = $(this)
@@ -114,7 +120,7 @@
           type : method,
           data : {'url' : data},
           success : function(res){
-            console.log(res) 
+              console.log(res)
               if (res.status == 200){
                 let fData = JSON.parse(res['detail'])
                 let htmlText = `<div class="card mx-auto text-dark" style="width: 18rem;">
@@ -131,9 +137,11 @@
               }else if(res.status==404){
                 $('#display-result').html(res['detail'])
               }
+              $('#submit-btn').removeClass('disabled').html('Go')
           },
           error : function(err, status, error){ // Handle errors
             console.log(err, status, error)
+            $('#submit-btn').removeClass('disabled').html('Go')
           }
    
        });
